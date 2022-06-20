@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 import datetime
 # import icecream 
-from icecream import ic
 #from newdjangoproject4.nguoidung.models import thongtinnguoidung
 from nguoidung.forms import DangKy
 from django.http import HttpResponse, StreamingHttpResponse
