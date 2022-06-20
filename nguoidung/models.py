@@ -25,9 +25,9 @@ class thongtinnguoidung(models.Model):
     dateofbirth = models.DateField(default=datetime.date.today)
     email = models.EmailField(null=True)
     GENDER_CHOICES = (
-        ('M', 'Nam'),
-        ('F', 'Nữ'),
-        ('O', 'Khác')
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Others')
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='')
     room = models.ForeignKey(RoomChat, on_delete=PROTECT, default='', null=True)
