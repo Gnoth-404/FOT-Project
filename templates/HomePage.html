@@ -21,7 +21,7 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="/home" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none me-lg-auto">
                     <img src="https://raw.githubusercontent.com/NaughtyRavenn/Images/main/Main-project/logo.jpg" alt="logo" height="40" width="40" class="rounded-circle">
-                    <span class="fw-bold px-3 text-white" style="font-size: 30px;">VIDEO STREAMING</span>
+                    <span class="fw-bold px-3 text-white" style="font-size: 30px;">GOOM</span>
                 </a>
                 <div id="rt-clock"></div>
                 <script>
@@ -95,7 +95,7 @@
                         }
                         document.getElementById('rt-clock').style.fontSize = '1.125rem';
                         document.getElementById('rt-clock').style.fontFamily = 'Arial, Helvetica, sans-serif';
-                        document.getElementById('rt-clock').style.color = 'black';
+                        document.getElementById('rt-clock').style.color = 'white';
                         document.getElementById('rt-clock').innerHTML = h + ":" + m + " • " + day + ", " + month + " " + date;
                         setTimeout(startTime, 1000);
                     }
@@ -181,18 +181,16 @@
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                         <li>
-                            <p style="padding: .25rem 1rem 0 1rem;cursor:default;">Xin chào, {{ user }}</p>
+                            <p style="padding: .25rem 1rem 0 1rem;cursor:default;">Hello, {{ user }}</p>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Thông tin</a></li>
-                        <li><a class="dropdown-item" href="#">Trợ giúp</a></li>
-                        <li><a class="dropdown-item" href="#">Điều khoản</a></li>
+                        <li><a class="dropdown-item" href="#">Terms of service</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="{% url 'dangxuat' %}">Đăng xuất</a></li>
+                        <li><a class="dropdown-item" href="{% url 'dangxuat' %}">Log out</a></li>
                     </ul>
                 </div>
             </div>
@@ -203,11 +201,11 @@
     <div class="container col-xxl-10 px-4 py-5">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
             <div class="col-10 col-sm-8 col-lg-6 mx-auto">
-                <img src="https://raw.githubusercontent.com/NaughtyRavenn/Images/main/Main-project/UIT-logo.png" class="d-block mx-auto img-fluid" alt="Bootstrap Themes" width="col-md-auto" height="col-md-auto" loading="lazy">
+                <img src="/static/Sources/new_vgu.png" class="d-block mx-auto img-fluid" alt="Bootstrap Themes" width="col-md-auto" height="col-md-auto" loading="lazy">
             </div>
             <div class="col-lg-6">
-                <h1 class="display-5 fw-bold lh-1 mb-3">Đây là nền tảng video streaming, là chủ đề đồ án của nhóm 21</h1>
-                <p class="lead fs-3">Chúng tôi mong muốn phát triển một trang web cung cấp môi trường cho các cuộc họp, miễn phí cho mọi người.</p>
+                <h1 class="display-5 fw-bold lh-1 mb-3">FOT Project - ECE 2019</h1>
+                <p class="lead fs-3">We develop an application where users can join or host a meeting for free by using Stringee API with all other basic features of Zoom</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4">
                     <button type="button" class="btn btn-outline-secondary btn-lg px-4 me-md-2 cus-btn-2 fs-6"><a class="text-decoration-none" href="http://127.0.0.1:3000/"><i class="fa fa-video-camera px-2" aria-hidden="true"></i>Tạo cuộc họp mới</a></button>
                     <!-- <button type="button" class="btn btn-outline-secondary btn-lg px-4 cus-btn-2"><a class="text-decoration-none" href="{% url 'dangnhap' %}"><i class="fa fa-sign-in px-2" aria-hidden="true"></i>Tham gia cuộc họp</a></button> -->
@@ -231,7 +229,7 @@
                     <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
                         <img src="https://raw.githubusercontent.com/NaughtyRavenn/Images/main/Main-project/logo-gray.jpg" width="30" height="30" alt="gray-logo" class="rounded-circle">
                     </a>
-                    <span class="text-muted">&copy; 2021 Company, Inc</span>
+                    <span class="text-muted">&copy; 2022 Company, Inc</span>
                 </div>
 
                 <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
