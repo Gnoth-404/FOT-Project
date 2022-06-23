@@ -42,7 +42,7 @@
             </div> -->
         </ul>
         <div class="col-md-3 mx-4 text-end" style="width:auto" id="myDIV">
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" ><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true" ></i></button>
             <button type="button" class="btn btn-outline-light me-2 cus-btn-1"><i class="fa fa-microphone px-2 fs-5" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-outline-light me-2 cus-btn-1"><i class="fa fa-caret-square-o-up px-2 fs-5" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-outline-light cus-btn-1 px-3"><i class="fa fa-sign-out fs-5" aria-hidden="true"></i><a class="text-decoration-none text-white" href={% url 'homepage' %}>Leave</a></button>
@@ -63,6 +63,9 @@
                     </button>
                     <button class="button is-primary" v-if="roomId" @click="publishVideo(true)" >
                         Share Screen
+                    </button>
+                    <button class="button is-primary" v-if="roomId" @click="testdisablevideo" >
+                        Disable Video
                     </button>
                     <input type='text' id='roomId'>
                     <input type='text' id='roomToken'>
@@ -113,7 +116,8 @@
                 roomToken: '',
                 roomId: '',
                 room: undefined,
-                client: undefined
+                client: undefined,
+                localTrack: undefined
             },
             mounted() {
                 api.setRestToken()
@@ -135,18 +139,21 @@
                         client.connect(userToken);
 
                         this.client = client;
+                        //create client
+
                     });   
                 },
 
                 publishVideo: async function(shareScreen = false) {
-                    const localTrack = await StringeeVideo.createLocalVideoTrack(
+                    this.localTrack = await StringeeVideo.createLocalVideoTrack(
                         this.client,{
                         audio: true,
                         video: true,
                         screen: shareScreen,
                         videoDimensions: { width: 640, height: 360 }
                     })
-                    const track = localTrack.attach();
+
+                    const track = this.localTrack.attach();
                     this.addVideo(track)
 
                     const roomData = await StringeeVideo.joinRoom(
@@ -157,11 +164,11 @@
                     console.log({roomData, room});
 
                     this.room = room;
-                    room.publish(localTrack);
+                    room.publish(this.localTrack);
                     room.clearAllOnMethos();
                     room.on("addtrack", async(event) => {
                         const trackInfo = event.info.track;
-                        if (trackInfo.serverId === localTrack.serverId) {
+                        if (trackInfo.serverId === this.localTrack.serverId) {
                             return;
                         }
                         this.subscribeTrack(trackInfo)
@@ -176,7 +183,24 @@
                     })
                     roomData.listTracksInfo.forEach(trackInfo => this.subscribeTrack(trackInfo))
 
-                    room.publish(localTrack);
+                    room.publish(this.localTrack);
+                },
+                testdisablevideo: async function(){
+                    this.localTrack.forEach(function (track) {
+                    if (track.screen) {
+                        return;
+                    }
+                    console.log('hien tai track.localVideoEnabled=' + track.localVideoEnabled);
+                    if (track.localVideoEnabled) {
+                        //disable
+                        track.enableLocalVideo(false);
+                        $('#disableVideoBtn').html('Enable local video');
+                    } else {
+                        //enable
+                        track.enableLocalVideo(true);
+                        $('#disableVideoBtn').html('Disable local video');
+                    }
+                });
                 },
                 createRoom: async function() {
                     //console.log('hahahaha')
@@ -193,6 +217,7 @@
 
                     await this.publishVideo();
                 },
+
                 joinRoom: async function() {
                     //console.log('hihihihihi')
 
@@ -220,14 +245,16 @@
                     document.getElementById("roomToken").value=this.roomToken
 
                     await this.login();
-
                     await this.publishVideo();
                 },
+
                 addVideo: function(video) {
                     video.setAttribute("controls", "true");
+                    video.setAttribute("style", "width: 300px;background: #424141;padding: 5px;height: 200px;margin: 5px");
                     video.setAttribute("playsinline", "true");
                     VideoContainer.appendChild(video);
                 },
+
                 subscribeTrack: async function(trackInfo) {
                     const semitrack = await this.room.subscribe(trackInfo.serverId)
                         semitrack.on('ready', () => {
@@ -235,6 +262,7 @@
                             VideoContainer.appendChild(ele);
                         });
                 }
+
             }
         })
         
