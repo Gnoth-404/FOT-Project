@@ -50,3 +50,13 @@ body {
         display: none;
     }
 }
+.IDstream {
+    box-shadow: 2px 2px 5px rgb(214, 214, 214);
+    color: white !important;
+    background-color: blueviolet !important;
+}
+.cus-btn-3 {
+    border-color: #510086 !important;
+    background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+    color: white !important;
+}

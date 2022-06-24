@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 # Create your models here.
 
 class RoomChat(models.Model):
-    RoomID = models.CharField(max_length=4)
+    RoomID = models.CharField(max_length=64)
     RoomIDAPI = models.CharField(max_length=100, default='')
     def __str__(self):
         return self.RoomID

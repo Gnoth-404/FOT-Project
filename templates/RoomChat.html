@@ -19,58 +19,31 @@
 </head>
 
 <body>
-    <header class="d-flex flex-wrap justify-content-end py-2 px-3 mb-2 bg-linear" style="background-color: rgb(107, 107, 153);">
-        <ul class="nav nav-pills col-12 col-md-auto mb-2 justify-content-center mb-md-0 text-end" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link bg-button active text-white fw-6 mx-md-1" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fa fa-commenting fs-5 " aria-hidden="true"></i></button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link bg-button text-white fw-6 mx-md-1" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"><i class="fa fa-users fs-5" aria-hidden="true"></i></button>
-            </li>
-            <!-- <div class="dropdown">
-                <button class="nav-link bg-button text-white fw-6 mx-md-1" id="dropdownUser1" data-bs-toggle="dropdown" type="button" aria-expanded="false"><i class="fa fa-hand-paper-o fs-5" aria-hidden="true"></i></button>
-                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="min-width: 0 !important;">
-                    <li>
-                        <li><a class="dropdown-item w3" href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fa fa-smile-o" aria-hidden="true"></i></a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></a></li>
-                </ul>
-            </div> -->
-        </ul>
-        <div class="col-md-3 mx-4 text-end" style="width:auto" id="myDIV">
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" ><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true" ></i></button>
+    <header class="d-flex flex-wrap align-items-center justify-content-between py-2 px-3 mb-2 bg-linear" style="background-color: rgb(107, 107, 153);">
+        <div class="btn cus-btn-2 ">Stream Room ID <input class="roomtoken" type='text' id='roomId' size ="50" disabled>
+        </div>
+        <div>
+            <input type='text' id='roomToken' size ="50" disabled hidden>
+        </div>
+
+
+        <div class="col-md-3 mx-4 text-end" style="width:auto" id="streamingapi">
+            <!-- <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="!roomId" @click="createRoom"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button> -->
+            
+            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top" v-if="!roomId" @click="joinRoom">JOIN</button>
+            
+            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="!roomId"  @click="publishVideo(true)"><i class="fa fa-caret-square-o-up px-2 fs-5" aria-hidden="true"></i></button>
+            
             <button type="button" class="btn btn-outline-light me-2 cus-btn-1"><i class="fa fa-microphone px-2 fs-5" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1"><i class="fa fa-caret-square-o-up px-2 fs-5" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-outline-light cus-btn-1 px-3"><i class="fa fa-sign-out fs-5" aria-hidden="true"></i><a class="text-decoration-none text-white" href={% url 'homepage' %}>Leave</a></button>
+            
+            <button type="button" class="btn btn-outline-light cus-btn-1 px-3"><i class="fa fa-sign-out fs-5" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Leave the meeting"></i><a class="text-decoration-none text-white" href={% url 'homepage' %}>Leave</a></button>
         </div>
         
     </header>
     <div class="flex-grow-1 px-2 py-2" style="min-height: calc(100% - 65px);height: calc(100% - 65px);;">
         <div class="d-grid gap-3 cus-div-2" style="grid-template-columns: 5fr 1.5fr;height:100%">
-            <div class="border rounded-3 h-100">
-                
-                <p>Screen Sharing</p>
                 <div id="streamingapi">
-                    <button class="button is-primary" v-if="!roomId" @click="createRoom" >
-                        Create Room
-                    </button>
-                    <button class="button is-primary" v-if="!roomId" @click="joinRoom" >
-                        Join Room
-                    </button>
-                    <button class="button is-primary" v-if="roomId" @click="publishVideo(true)" >
-                        Share Screen
-                    </button>
-                    <button class="button is-primary" v-if="roomId" @click="testdisablevideo" >
-                        Disable Video
-                    </button>
-                    <input type='text' id='roomId'>
-                    <input type='text' id='roomToken'>
 
-                </div>
                 <div id='videos' class='mx-auto'></div>
             </div>
             <div class="bg-linear border rounded-3 h-100 cus-div-1 cus-div-3">
@@ -83,9 +56,9 @@
                             <div class="input-group mb-3 px-2" style=" position: absolute;bottom: 0;color: blanchedalmond;">
                                 {% csrf_token %}
                                 <input type="hidden" name="username" id="username" value="{{user}}" />
-                                <input type="hidden" name="room_id" id="room_id" value="{{room_name}}" />
-                                <input type="text" name="message" id="message" class="form-control" placeholder="Nhập ..." aria-label="Recipient's username" aria-describedby="button-addon2" />
-                                <button class="btn btn-outline-secondary cus-btn-2 " type="submit" id="button-addon2">Gửi</button>
+                                <input type="hidden" name="room_id" id="room_name" value="{{room_name}}" />
+                                <input type="text" name="message" id="message" class="form-control" placeholder="Enter message ..." aria-label="Recipient's username" aria-describedby="button-addon2" />
+                                <button class="btn btn-outline-secondary cus-btn-2 " type="submit" id="button-addon2">Send</button>
                             </div>
                         </form>
                     </div>
@@ -93,7 +66,7 @@
                         hoho
                     </div>
                         
-
+                        
                 </div>
             </div>
         </div>
@@ -116,8 +89,7 @@
                 roomToken: '',
                 roomId: '',
                 room: undefined,
-                client: undefined,
-                localTrack: undefined
+                client: undefined
             },
             mounted() {
                 api.setRestToken()
@@ -139,21 +111,18 @@
                         client.connect(userToken);
 
                         this.client = client;
-                        //create client
-
                     });   
                 },
 
                 publishVideo: async function(shareScreen = false) {
-                    this.localTrack = await StringeeVideo.createLocalVideoTrack(
+                    const localTrack = await StringeeVideo.createLocalVideoTrack(
                         this.client,{
                         audio: true,
                         video: true,
                         screen: shareScreen,
                         videoDimensions: { width: 640, height: 360 }
                     })
-
-                    const track = this.localTrack.attach();
+                    const track = localTrack.attach();
                     this.addVideo(track)
 
                     const roomData = await StringeeVideo.joinRoom(
@@ -164,11 +133,11 @@
                     console.log({roomData, room});
 
                     this.room = room;
-                    room.publish(this.localTrack);
+                    room.publish(localTrack);
                     room.clearAllOnMethos();
                     room.on("addtrack", async(event) => {
                         const trackInfo = event.info.track;
-                        if (trackInfo.serverId === this.localTrack.serverId) {
+                        if (trackInfo.serverId === localTrack.serverId) {
                             return;
                         }
                         this.subscribeTrack(trackInfo)
@@ -183,60 +152,12 @@
                     })
                     roomData.listTracksInfo.forEach(trackInfo => this.subscribeTrack(trackInfo))
 
-                    room.publish(this.localTrack);
-                },
-                testdisablevideo: async function(){
-                    this.localTrack.forEach(function (track) {
-                    if (track.screen) {
-                        return;
-                    }
-                    console.log('hien tai track.localVideoEnabled=' + track.localVideoEnabled);
-                    if (track.localVideoEnabled) {
-                        //disable
-                        track.enableLocalVideo(false);
-                        $('#disableVideoBtn').html('Enable local video');
-                    } else {
-                        //enable
-                        track.enableLocalVideo(true);
-                        $('#disableVideoBtn').html('Disable local video');
-                    }
-                });
-                },
-                createRoom: async function() {
-                    //console.log('hahahaha')
-                    const room = await api.createRoom()
-                    const roomToken = await api.getRoomToken(room.roomId)
-
-                    this.roomId = room.roomId
-                    this.roomToken = roomToken
-                    document.getElementById("roomId").value=this.roomId
-                    document.getElementById("roomToken").value=this.roomToken
-                    //login 
-                    //await this.login();
-                    await this.login();
-
-                    await this.publishVideo();
+                    room.publish(localTrack);
                 },
 
                 joinRoom: async function() {
-                    //console.log('hihihihihi')
 
-                    //const roomId = document.getElementById("roomId").value
-                    //if (!roomId) {
-                    //    return
-                    //}
-
-                    //const roomToken = await api.getRoomToken(roomId)
-                    //this.roomId = roomId
-                    //this.roomToken = roomToken
-
-                    //await this.login();
-                    //await this.publishVideo();
-
-                    const roomId = prompt('Room ID');
-                    if (!roomId){
-                        return;
-                    }
+                    const roomId = document.getElementById("room_name").value
 
                     const roomToken = await api.getRoomToken(roomId)
                     this.roomId = roomId
@@ -245,16 +166,14 @@
                     document.getElementById("roomToken").value=this.roomToken
 
                     await this.login();
+
                     await this.publishVideo();
                 },
-
                 addVideo: function(video) {
                     video.setAttribute("controls", "true");
-                    video.setAttribute("style", "width: 300px;background: #424141;padding: 5px;height: 200px;margin: 5px");
                     video.setAttribute("playsinline", "true");
                     VideoContainer.appendChild(video);
                 },
-
                 subscribeTrack: async function(trackInfo) {
                     const semitrack = await this.room.subscribe(trackInfo.serverId)
                         semitrack.on('ready', () => {
@@ -262,7 +181,10 @@
                             VideoContainer.appendChild(ele);
                         });
                 }
-
+            }
+            ,
+            beforeMount(){
+                this.joinRoom();
             }
         })
         
@@ -291,6 +213,9 @@
     </script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            joinRoom();
+        });
         $(document).ready(function(){
         
         setInterval(function(){
@@ -311,9 +236,9 @@
                 }
             });
         },1000);
+
         })
         </script>
-
 
     <script>
         var header = document.getElementById("myDIV");
