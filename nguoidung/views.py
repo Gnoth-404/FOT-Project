@@ -84,6 +84,7 @@ def phongchatchinh(request, room_name):
     })
     
 
+
 @login_required(login_url='/dang_nhap/')
 def checkview(request):
     room = request.POST['room_name']
