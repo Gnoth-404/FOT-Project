@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Đăng Nhập</title>
+    <title>Sign in</title>
     {% load static %}
     <link rel="stylesheet" href="{% static '/LoginPage/style.css'%}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -23,8 +23,8 @@
                                 <div class="card-body p-md-5 mx-md-4">
 
                                     <div class="text-center">
-                                        <img src="https://raw.githubusercontent.com/NaughtyRavenn/Images/main/Main-project/logo.jpg" style="width: 185px;" alt="logo">
-                                        <h4 class="mt-1 mb-5 pb-1">We are Group 1 </h4>
+                                        <img src="/static/Sources/AI_logo.png" style="width: 150px; border-radius: 50%;" alt="logo">
+                                        <h4 class="mt-1 mb-5 pb-1">Group 1 </h4>
                                     </div>
 
                                     <form class="mx-1 mx-md-4" action="." method="post">
@@ -34,7 +34,7 @@
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-user me-3 fa-lg fa-fw fw-bold fs-3" aria-hidden="true"></i>
-                                            <div class="form-outline flex-fill mb-0 form-floating">
+                                            <div class="form-outline flex-fill mb-0 form-floating" style="height: 30px;">
                                                 {{ form.username }}
                                             </div>
                                         </div>
