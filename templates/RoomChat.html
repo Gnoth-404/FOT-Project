@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="shortcut icon" href="/static/Sources/favicon.ico">
 
 <head>
     <meta charset="UTF-8">
@@ -29,12 +30,12 @@
 
         <div class="col-md-3 mx-4 text-end" style="width:auto" id="streamingapi">
             <!-- <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="!roomId" @click="createRoom"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button> -->
+                        
+            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="publishVideo(true)"><i class=" fa fa-folder-open px-2 fs-5" aria-hidden="true"></i></button>
+
+            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="disableVideo"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button>
             
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top" v-if="!roomId" @click="joinRoom">JOIN</button>
-            
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="!roomId"  @click="publishVideo(true)"><i class="fa fa-caret-square-o-up px-2 fs-5" aria-hidden="true"></i></button>
-            
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1"><i class="fa fa-microphone px-2 fs-5" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="muteMicrophone"><i class="fa fa-microphone px-2 fs-5" aria-hidden="true"></i></button>
             
             <button type="button" class="btn btn-outline-light cus-btn-1 px-3"><i class="fa fa-sign-out fs-5" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Leave the meeting"></i><a class="text-decoration-none text-white" href={% url 'homepage' %}>Leave</a></button>
         </div>
@@ -84,12 +85,15 @@
         const VideoContainer = document.getElementById('videos');
         const vm = new Vue ({
             el: '#streamingapi',
-            data: {
-                userToken: '',
-                roomToken: '',
-                roomId: '',
-                room: undefined,
-                client: undefined
+            data: function () {
+                return {
+                    userToken: '',
+                    roomToken: '',
+                    roomId: '',
+                    room: undefined,
+                    client: undefined,
+                    track_pc: ''
+                }
             },
             mounted() {
                 api.setRestToken()
@@ -122,6 +126,8 @@
                         screen: shareScreen,
                         videoDimensions: { width: 640, height: 360 }
                     })
+                    console.log(localTrack)
+                    this.track_pc = localTrack;
                     const track = localTrack.attach();
                     this.addVideo(track)
 
@@ -150,10 +156,15 @@
                         const elements = event.semitrack.detach();
                         elements.forEach(element => element.remove()); 
                     })
+                    console.log(roomData.listTracksInfo);
                     roomData.listTracksInfo.forEach(trackInfo => this.subscribeTrack(trackInfo))
+
+
 
                     room.publish(localTrack);
                 },
+
+
 
                 joinRoom: async function() {
 
@@ -169,18 +180,48 @@
 
                     await this.publishVideo();
                 },
+
+
                 addVideo: function(video) {
+                    video.setAttribute("style", "width: 300px;background: #424141;padding: 5px;height: 200px;margin: 5px");
                     video.setAttribute("controls", "true");
                     video.setAttribute("playsinline", "true");
                     VideoContainer.appendChild(video);
                 },
+
                 subscribeTrack: async function(trackInfo) {
                     const semitrack = await this.room.subscribe(trackInfo.serverId)
                         semitrack.on('ready', () => {
-                            const ele = semitrack.attach();
-                            VideoContainer.appendChild(ele);
+                            const sub_track = semitrack.attach();
+                            VideoContainer.appendChild(sub_track);
                         });
-                }
+                },
+                muteMicrophone: function() {
+                    if (this.track_pc.muted) {
+                        //unmute
+                        console.log('unmute');
+                        this.track_pc.mute(false);
+                    } else {
+                        //mute
+                        console.log('mute');
+                        this.track_pc.mute(true);
+                    }
+                    this.track_pc.mute(true);
+
+                },
+                disableVideo: function(){
+
+                    if (this.track_pc.localVideoEnabled) {
+                        //disable
+                        this.track_pc.enableLocalVideo(false);
+                    } else {
+                        //enable
+                        this.track_pc.enableLocalVideo(true);
+                    }
+                },
+                
+
+
             }
             ,
             beforeMount(){
@@ -213,9 +254,7 @@
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            joinRoom();
-        });
+
         $(document).ready(function(){
         
         setInterval(function(){
