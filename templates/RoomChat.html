@@ -59,7 +59,7 @@
                                 <input type="hidden" name="username" id="username" value="{{user}}" />
                                 <input type="hidden" name="room_id" id="room_name" value="{{room_name}}" />
                                 <input type="text" name="message" id="message" class="form-control" placeholder="Enter message ..." aria-label="Recipient's username" aria-describedby="button-addon2" />
-                                <button class="btn btn-outline-secondary cus-btn-2 " type="submit" id="button-addon2">Send</button>
+                                <button class="btn btn-outline-secondary cus-btn-2 " type="submit" id="button-addon2">Gửi</button>
                             </div>
                         </form>
                     </div>
@@ -232,67 +232,65 @@
     </script>
 </body>
     
-    <script type="text/javascript">
-        $(document).on('submit','#post-form',function(e){
-            e.preventDefault();
+<script type="text/javascript">
+    $(document).on('submit','#post-form',function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type:'POST',
+            url:'/send',
+            data:{
+                username:$('#username').val(),
+                room_id:$('#room_name').val(),
+                message:$('#message').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function(data){
+                //alert(data)
+            }
+        });
+        document.getElementById('message').value = ''
+        });
+</script>
+
+<script>
+    $(document).ready(function(){
     
-            $.ajax({
-                type:'POST',
-                url:'/send',
-                data:{
-                    username:$('#username').val(),
-                    room_id:$('#room_id').val(),
-                    message:$('#message').val(),
-                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-                },
-                success: function(data){
-                    //alert(data)
+    setInterval(function(){
+        $.ajax({
+            type: 'GET',
+            url : "/getMessages/{{ room_name }}/",
+            success: function(response){
+                //console.log(response);
+                $("#display").empty();
+                for (var key in response.messages)
+                {
+                    var temp="<div class='card mx-auto my-3' style='margin-right: 10px; width: 95%;'><div class='card-body' ><h5 class='card-title'>"+response.messages[key].messenger+"</h5><p class='card-text'>"+response.messages[key].noidung+"</p></div></div>";
+                    $("#display").append(temp);
                 }
-            });
-            document.getElementById('message').value = ''
-            });
+            },
+            error: function(response){
+                alert('An error occured')
+            }
+        });
+    },1000);
+    })
     </script>
 
-    <script>
-
-        $(document).ready(function(){
-        
-        setInterval(function(){
-            $.ajax({
-                type: 'GET',
-                url : "/getMessages/{{ room_name }}/",
-                success: function(response){
-                    //console.log(response);
-                    $("#display").empty();
-                    for (var key in response.messages)
-                    {
-                        var temp="<div class='card mx-auto my-3' style='margin-right: 10px; width: 95%;'><div class='card-body' ><h5 class='card-title'>"+response.messages[key].messenger+"</h5><p class='card-text'>"+response.messages[key].noidung+"</p></div></div>";
-                        $("#display").append(temp);
-                    }
-                },
-                error: function(response){
-                    alert('An error occured')
-                }
-            });
-        },1000);
-
-        })
-        </script>
-
-    <script>
-        var header = document.getElementById("myDIV");
-        var btns = header.getElementsByClassName("cus-btn-1");
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener("click", function() {
-                if (this.document.getElementsByClassName("active"))
-                    this.className = this.className.replace("active");
-                // var current = document.getElementsByClassName("active");
-                // current[0].className = current[0].className.replace(" active", "");
-                else
-                    this.className += " active";
-            });
-        }
-    </script>
+<script>
+    var header = document.getElementById("myDIV");
+    var btns = header.getElementsByClassName("cus-btn-1");
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+            if (this.document.getElementsByClassName("active"))
+                this.className = this.className.replace("active");
+            // var current = document.getElementsByClassName("active");
+            // current[0].className = current[0].className.replace(" active", "");
+            else
+                this.className += " active";
+        });
+    }
+</script>
     
 
 
