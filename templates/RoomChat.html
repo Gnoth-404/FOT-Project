@@ -28,17 +28,18 @@
         </div>
 
 
-        <div class="col-md-3 mx-4 text-end" style="width:auto" id="streamingapi">
+        <div class="col-md-1 mx-2 text-end" style="width:auto" id="streamingapi">
             <!-- <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="!roomId" @click="createRoom"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button> -->
                         
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="publishVideo(true)"><i class=" fa fa-folder-open px-2 fs-5" aria-hidden="true"></i></button>
+            <button type="button" id="toggle" class="btn btn-outline-light me-2 optionBtn" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="publishVideo(true)"><i class=" fa fa-folder-open px-2 fs-5" aria-hidden="true"></i></button>
 
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="disableVideo"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button>
+            <button type="button" id="toggle" class="btn btn-outline-light me-2 optionBtn cam" data-toggle="tooltip" data-placement="top" title="Turn on/off camera" onclick="toggleCam()" v-if="roomId"  @click="disableVideo"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button>
             
-            <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="muteMicrophone"><i class="fa fa-microphone px-2 fs-5" aria-hidden="true"></i></button>
+            <button type="button" id="toggle" class="btn btn-outline-light me-2 optionBtn mic" data-toggle="tooltip" data-placement="top" title="Turn on/off microphone" onclick="toggleMic()" v-if="roomId"  @click="muteMicrophone"><i class="fa fa-microphone px-2 fs-5" aria-hidden="true"></i></button>
             
-            <button type="button" class="btn btn-outline-light cus-btn-1 px-3"><i class="fa fa-sign-out fs-5" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Leave the meeting"></i><a class="text-decoration-none text-white" href={% url 'homepage' %}>Leave</a></button>
+            
         </div>
+        <a type="button" class="btn btn-outline-light optionBtn exit px-3" href={% url 'homepage' %}><i class="fa fa-sign-out fs-5" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Leave the meeting" ></i></a>
         
     </header>
     <div class="flex-grow-1 px-2 py-2" style="min-height: calc(100% - 65px);height: calc(100% - 65px);;">
@@ -59,7 +60,7 @@
                                 <input type="hidden" name="username" id="username" value="{{user}}" />
                                 <input type="hidden" name="room_id" id="room_name" value="{{room_name}}" />
                                 <input type="text" name="message" id="message" class="form-control" placeholder="Enter message ..." aria-label="Recipient's username" aria-describedby="button-addon2" />
-                                <button class="btn btn-outline-secondary cus-btn-2 " type="submit" id="button-addon2">Gửi</button>
+                                <button class="btn btn-outline-secondary cus-btn-2 " type="submit" id="button-addon2">Send</button>
                             </div>
                         </form>
                     </div>
@@ -291,7 +292,66 @@
         });
     }
 </script>
+<script>
+    function toggleCam () {
+        var element = document.querySelector(".cam")
+        element.classList.toggle("off");
+    }
+    function toggleMic () {
+        var element = document.querySelector(".mic")
+        element.classList.toggle("off");
+    }
+
+</script>
     
 
 
 </html>
+
+<style>
+    .IDstream {
+        box-shadow: none;
+        border-radius: 5px;
+        border-color: black;
+        border-width: 10px;
+        background: linear-gradient(to right,#d8363a, #dd3675, #b44593);
+        background-color: transparent;
+        padding: 7px;
+    }
+    .optionBtn:hover {
+        background: linear-gradient(to right, #fd0db5, #d836d8);
+    }
+    .optionBtn:active{
+        background: rgb(255, 255, 255);
+        transform: scale(0.9);
+        transition: all 0.1s ease-in-out;
+    }
+    .off{
+        transform: scale(1.1);
+        background: red;
+        color: black;
+        transition: all 0.1s ease-in-out;
+    }
+    .exit{
+        background: red;
+    }
+    .exit:hover{
+        color: red;
+        background: white;
+        border-width: 1px;
+        border-color: red;
+
+    }
+    .sendBtn {
+        box-shadow: none;
+        background: violet;
+    }
+    .sendBtn:hover {
+        background: linear-gradient(to right, #fd0db5, #d836d8);
+    }
+    .sendBtn:active{
+        background: #d836d8;
+        transform: scale(0.9);
+        transition: all 0.1s ease-in-out;
+    }
+    </style>
