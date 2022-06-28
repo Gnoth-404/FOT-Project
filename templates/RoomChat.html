@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="shortcut icon" href="/static/Sources/favicon.ico">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MeetingRoom - {{ room_name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/RoomChat/style.css'%}">
+    <script src="{% static '/api.js' %}"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.20.0/dist/axios.min.js"></script>
+
+    
+</head>
+
+<body>
+    <header class="d-flex flex-wrap align-items-center justify-content-between py-2 px-3 mb-2 bg-linear" style="background-color: rgb(107, 107, 153);">
+        <div class="btn cus-btn-2 ">Stream Room ID <input class="roomtoken" type='text' id='roomId' size ="50" disabled>
+        </div>
+        <div>
+            <input type='text' id='roomToken' size ="50" disabled hidden>
+        </div>
+
+
+        <div class="col-md-1 mx-2 text-end" style="width:auto" id="streamingapi">
+            <!-- <button type="button" class="btn btn-outline-light me-2 cus-btn-1" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="!roomId" @click="createRoom"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button> -->
+                        
+            <button type="button" id="toggle" class="btn btn-outline-light me-2 optionBtn" data-toggle="tooltip" data-placement="top" title="Share screen" v-if="roomId"  @click="publishVideo(true)"><i class=" fa fa-folder-open px-2 fs-5" aria-hidden="true"></i></button>
+
+            <button type="button" id="toggle" class="btn btn-outline-light me-2 optionBtn cam" data-toggle="tooltip" data-placement="top" title="Turn on/off camera" onclick="toggleCam()" v-if="roomId"  @click="disableVideo"><i class="fa fa-video-camera px-2 fs-5" aria-hidden="true"></i></button>
+            
+            <button type="button" id="toggle" class="btn btn-outline-light me-2 optionBtn mic" data-toggle="tooltip" data-placement="top" title="Turn on/off microphone" onclick="toggleMic()" v-if="roomId"  @click="muteMicrophone"><i class="fa fa-microphone px-2 fs-5" aria-hidden="true"></i></button>
+            
+            
+        </div>
+        <a type="button" class="btn btn-outline-light optionBtn exit px-3" href={% url 'homepage' %}><i class="fa fa-sign-out fs-5" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Leave the meeting" ></i></a>
+        
+    </header>
+    <div class="flex-grow-1 px-2 py-2" style="min-height: calc(100% - 65px);height: calc(100% - 65px);;">
+        <div class="d-grid gap-3 cus-div-2" style="grid-template-columns: 5fr 1.5fr;height:100%">
+                <div id="streamingapi">
+
+                <div id='videos' class='mx-auto'></div>
+            </div>
+            <div class="bg-linear border rounded-3 h-100 cus-div-1 cus-div-3">
+                <div class="tab-content h-100" id="pills-tabContent">
+                    <div class="tab-pane fade show active h-100" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" style=" position: relative;">
+                        <div class="chat-area" id="display" style="height:75vh; overflow-y: scroll;">
+                            
+                        </div>
+                        <form id="post-form">
+                            <div class="input-group mb-3 px-2" style=" position: absolute;bottom: 0;color: blanchedalmond;">
+                                {% csrf_token %}
+                                <input type="hidden" name="username" id="username" value="{{user}}" />
+                                <input type="hidden" name="room_id" id="room_name" value="{{room_name}}" />
+                                <input type="text" name="message" id="message" class="form-control" placeholder="Enter message ..." aria-label="Recipient's username" aria-describedby="button-addon2" />
+                                <button class="btn btn-outline-secondary cus-btn-2 " type="submit" id="button-addon2">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        hoho
+                    </div>
+                        
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js " integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM " crossorigin="anonymous "></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js " integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p " crossorigin="anonymous "></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js " integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF " crossorigin="anonymous "></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js "></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.stringee.com/sdk/web/latest/stringee-web-sdk.min.js"></script>
+    <script src="https://cdn.stringee.com/sdk/web/2.2.1/stringee-web-sdk.min.js"></script>
+    <script>
+        const VideoContainer = document.getElementById('videos');
+        const vm = new Vue ({
+            el: '#streamingapi',
+            data: function () {
+                return {
+                    userToken: '',
+                    roomToken: '',
+                    roomId: '',
+                    room: undefined,
+                    client: undefined,
+                    track_pc: ''
+                }
+            },
+            mounted() {
+                api.setRestToken()
+            },
+            methods: {
+                login: function() {
+                    return new Promise(async(resolve) => {
+                        const userId = document.getElementById("username").value
+                        const userToken = await api.getUserToken(userId)
+                        this.userToken = userToken
+    
+                        //tạo client 
+                        const client = new StringeeClient();
+
+                        client.on('authen', (result) => {
+                            console.log('on authen', result)
+                            resolve(result)
+                        })
+                        client.connect(userToken);
+
+                        this.client = client;
+                    });   
+                },
+
+                publishVideo: async function(shareScreen = false) {
+                    const localTrack = await StringeeVideo.createLocalVideoTrack(
+                        this.client,{
+                        audio: true,
+                        video: true,
+                        screen: shareScreen,
+                        videoDimensions: { width: 640, height: 360 }
+                    })
+                    console.log(localTrack)
+                    this.track_pc = localTrack;
+                    const track = localTrack.attach();
+                    this.addVideo(track)
+
+                    const roomData = await StringeeVideo.joinRoom(
+                        this.client,
+                        this.roomToken
+                    );
+                    const room = roomData.room;
+                    console.log({roomData, room});
+
+                    this.room = room;
+                    room.publish(localTrack);
+                    room.clearAllOnMethos();
+                    room.on("addtrack", async(event) => {
+                        const trackInfo = event.info.track;
+                        if (trackInfo.serverId === localTrack.serverId) {
+                            return;
+                        }
+                        this.subscribeTrack(trackInfo)
+                        //this.addVideo(semitrack)
+                    });
+                    room.on('removetrack', (event) => {
+                        if(!event.semitrack) {
+                            return 
+                        }
+                        const elements = event.semitrack.detach();
+                        elements.forEach(element => element.remove()); 
+                    })
+                    console.log(roomData.listTracksInfo);
+                    roomData.listTracksInfo.forEach(trackInfo => this.subscribeTrack(trackInfo))
+
+
+
+                    room.publish(localTrack);
+                },
+
+
+
+                joinRoom: async function() {
+
+                    const roomId = document.getElementById("room_name").value
+
+                    const roomToken = await api.getRoomToken(roomId)
+                    this.roomId = roomId
+                    this.roomToken = roomToken
+                    document.getElementById("roomId").value=this.roomId
+                    document.getElementById("roomToken").value=this.roomToken
+
+                    await this.login();
+
+                    await this.publishVideo();
+                },
+
+
+                addVideo: function(video) {
+                    video.setAttribute("style", "width: 300px;background: #424141;padding: 5px;height: 200px;margin: 5px");
+                    video.setAttribute("controls", "true");
+                    video.setAttribute("playsinline", "true");
+                    VideoContainer.appendChild(video);
+                },
+
+                subscribeTrack: async function(trackInfo) {
+                    const semitrack = await this.room.subscribe(trackInfo.serverId)
+                        semitrack.on('ready', () => {
+                            const sub_track = semitrack.attach();
+                            VideoContainer.appendChild(sub_track);
+                        });
+                },
+                muteMicrophone: function() {
+                    if (this.track_pc.muted) {
+                        //unmute
+                        console.log('unmute');
+                        this.track_pc.mute(false);
+                    } else {
+                        //mute
+                        console.log('mute');
+                        this.track_pc.mute(true);
+                    }
+                    this.track_pc.mute(true);
+
+                },
+                disableVideo: function(){
+
+                    if (this.track_pc.localVideoEnabled) {
+                        //disable
+                        this.track_pc.enableLocalVideo(false);
+                    } else {
+                        //enable
+                        this.track_pc.enableLocalVideo(true);
+                    }
+                },
+                
+
+
+            }
+            ,
+            beforeMount(){
+                this.joinRoom();
+            }
+        })
+        
+    </script>
+</body>
+    
+<script type="text/javascript">
+    $(document).on('submit','#post-form',function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type:'POST',
+            url:'/send',
+            data:{
+                username:$('#username').val(),
+                room_id:$('#room_name').val(),
+                message:$('#message').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function(data){
+                //alert(data)
+            }
+        });
+        document.getElementById('message').value = ''
+        });
+</script>
+
+<script>
+    $(document).ready(function(){
+    
+    setInterval(function(){
+        $.ajax({
+            type: 'GET',
+            url : "/getMessages/{{ room_name }}/",
+            success: function(response){
+                //console.log(response);
+                $("#display").empty();
+                for (var key in response.messages)
+                {
+                    var temp="<div class='card mx-auto my-3' style='margin-right: 10px; width: 95%;'><div class='card-body' ><h5 class='card-title'>"+response.messages[key].messenger+"</h5><p class='card-text'>"+response.messages[key].noidung+"</p></div></div>";
+                    $("#display").append(temp);
+                }
+            },
+            error: function(response){
+                alert('An error occured')
+            }
+        });
+    },1000);
+    })
+    </script>
+
+<script>
+    var header = document.getElementById("myDIV");
+    var btns = header.getElementsByClassName("cus-btn-1");
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+            if (this.document.getElementsByClassName("active"))
+                this.className = this.className.replace("active");
+            // var current = document.getElementsByClassName("active");
+            // current[0].className = current[0].className.replace(" active", "");
+            else
+                this.className += " active";
+        });
+    }
+</script>
+<script>
+    function toggleCam () {
+        var element = document.querySelector(".cam")
+        element.classList.toggle("off");
+    }
+    function toggleMic () {
+        var element = document.querySelector(".mic")
+        element.classList.toggle("off");
+    }
+
+</script>
+    
+
+
+</html>
+
+<style>
+    .IDstream {
+        box-shadow: none;
+        border-radius: 5px;
+        border-color: black;
+        border-width: 10px;
+        background: linear-gradient(to right,#d8363a, #dd3675, #b44593);
+        background-color: transparent;
+        padding: 7px;
+    }
+    .optionBtn:hover {
+        background: linear-gradient(to right, #fd0db5, #d836d8);
+    }
+    .optionBtn:active{
+        background: rgb(255, 255, 255);
+        transform: scale(0.9);
+        transition: all 0.1s ease-in-out;
+    }
+    .off{
+        transform: scale(1.1);
+        background: red;
+        color: black;
+        transition: all 0.1s ease-in-out;
+    }
+    .exit{
+        background: red;
+    }
+    .exit:hover{
+        color: red;
+        background: white;
+        border-width: 1px;
+        border-color: red;
+
+    }
+    .sendBtn {
+        box-shadow: none;
+        background: violet;
+    }
+    .sendBtn:hover {
+        background: linear-gradient(to right, #fd0db5, #d836d8);
+    }
+    .sendBtn:active{
+        background: #d836d8;
+        transform: scale(0.9);
+        transition: all 0.1s ease-in-out;
+    }
+    </style>
