@@ -1,7 +1,4 @@
-# Goom (Google Meet + Zoom) - the video call application 
-
-EEIT 2019 FoT: List of topics and softwares
-An application where users can join or host a meeting with their name by using Stringee API with all other basic features of Zoom
+# Goom (Google Meet + Zoom) 
 
 
 <h1 align="center">Goom- the video call application</h1>
@@ -72,6 +69,8 @@ Here you can find the demo link:
 ![Screenshot of Goot Meeting Room](/static/Sources/meeting_room.png)
 <br/>
 
+## :white_check_mark: Requirements
+
 
 ## 👨🏻‍💻 Run Locally
 
@@ -90,29 +89,7 @@ Here you can find the demo link:
 - Install dependencies
 
 ```bash
-  pip install requirements.txt
-```
-
-- Create a .env file
-
-- Request an API key from TMDB and them add it to the .env file
-
-```
-REACT_APP_API_KEY=REACT_APP_API_KEY
-```
-
-- Create a project inside Google Firebase and export the configuration
-
-- Add the configuration inside the .env file created previously
-
-```
-REACT_APP_FIREBASE_API_KEY=REACT_APP_FIREBASE_API_KEY
-REACT_APP_FIREBASE_AUTH_DOMAIN=REACT_APP_FIREBASE_AUTH_DOMAIN
-REACT_APP_FIREBASE_PROJECT_ID=REACT_APP_FIREBASE_PROJECT_ID
-REACT_APP_FIREBASE_STORAGE_BUCKET=REACT_APP_FIREBASE_STORAGE_BUCKET
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=REACT_APP_FIREBASE_MESSAGING_SENDER_ID
-REACT_APP_FIREBASE_APP_ID=REACT_APP_FIREBASE_APP_ID
-REACT_APP_FIREBASE_MEASUREMEMT_ID=REACT_APP_FIREBASE_MEASUREMEMT_ID
+  pip install -r requirements.txt
 ```
 
 - Start the server
