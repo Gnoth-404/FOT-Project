@@ -20,17 +20,17 @@ class DangKy(forms.Form):
             password2 = self.cleaned_data['password2']
             if password1==password2 and password1:
                 return password2
-        raise ValidationError("Mật Khẩu không hợp lệ")
+        raise ValidationError("Invalid password")
     
     def clean_username(self):
         username = self.cleaned_data['username']
         if not re.search(r'^\w+$', username):
-            raise ValidationError("Tên Tài Khoản không hợp lệ")
+            raise ValidationError("Invalid username")
         try:
             User.objects.get(username=username)
         except ObjectDoesNotExist:
             return username
-        raise ValidationError("Tên Tài Khoản đã tồn tại")
+        raise ValidationError("Username was already taken")
     
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -38,7 +38,7 @@ class DangKy(forms.Form):
             User.objects.get(email=email)
         except ObjectDoesNotExist:
             return email
-        raise ValidationError("Email đã tồn tại")
+        raise ValidationError("Email was already taken")
     
     def transform_email(self):
         email = self.cleaned_data['email']
